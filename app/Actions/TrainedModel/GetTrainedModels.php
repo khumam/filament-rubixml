@@ -11,6 +11,6 @@ class GetTrainedModels
     
     public function handle()
     {
-        return TrainedModel::latest()->get();
+        return TrainedModel::latest()->whereHas("dataset")->get();
     }
 }

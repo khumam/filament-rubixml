@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Enums\Algorithm;
-use App\Enums\Transformer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Dataset extends Model
 {
@@ -13,13 +13,23 @@ class Dataset extends Model
         'file_path',
         'label_column',
         'exclude_column',
-        'algorithm',
+        'type',
+        'algorithm_id',
         'transformer'
     ];
     
     protected $casts = [
-        'algorithm' => Algorithm::class,
         'exclude_column' => 'array',
         'transformer' => 'array'
     ];
+    
+    public function trainedModel(): HasOne
+    {
+        return $this->hasOne(TrainedModel::class);
+    }
+    
+    public function algorithm(): BelongsTo
+    {
+        return $this->belongsTo(Algorithm::class);
+    }
 }

@@ -2,16 +2,19 @@
 
 namespace App\Filament\Resources\Datasets\Schemas;
 
-use App\Enums\Algorithm;
+use App\Enums\AlgorithmType;
 use App\Enums\Transformer;
+use App\Models\Algorithm;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Collection;
 
 class DatasetForm
 {
@@ -35,10 +38,22 @@ class DatasetForm
                     TagsInput::make("exclude_column")
                         ->placeholder("Exclude Column")
                         ->required(),
-                    Select::make("algorithm")
+                    Select::make("type")
+                        ->placeholder("Dataset Type")
+                        ->required()
+                        ->options(AlgorithmType::class)
+                        ->live()
+                        ->afterStateUpdated(
+                            fn(Set $set) => $set("algorithm", null),
+                        ),
+                    Select::make("algorithm_id")
                         ->placeholder("Algorithm")
                         ->required()
-                        ->options(Algorithm::class),
+                        ->options(
+                            fn(Get $get): Collection => Algorithm::query()
+                                ->where("type", $get("type"))
+                                ->pluck("name", "id"),
+                        ),
                     Repeater::make("transformer")->schema([
                         Select::make("transformer_name")
                             ->placeholder("Transformer")

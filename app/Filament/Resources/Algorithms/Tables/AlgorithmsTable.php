@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\Datasets\Tables;
+namespace App\Filament\Resources\Algorithms\Tables;
 
-use App\Actions\Dataset\TrainDataset;
-use App\Models\Dataset;
-use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class DatasetsTable
+class AlgorithmsTable
 {
     public static function configure(Table $table): Table
     {
@@ -19,15 +17,8 @@ class DatasetsTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('label_column')
-                    ->searchable(),
-                TextColumn::make('exclude_column')
-                    ->searchable(),
-                TextColumn::make('algorithm.name')
-                    ->searchable(),
-                TextColumn::make('trainedModel.latest_accuracy')
-                    ->label('Latest Accuracy')
-                    ->searchable(),
+                TextColumn::make('type')
+                    ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -41,10 +32,7 @@ class DatasetsTable
                 //
             ])
             ->recordActions([
-                Action::make('train')
-                    ->label('Train')
-                    ->icon('heroicon-o-rocket-launch')
-                    ->action(fn (Dataset $dataset) => TrainDataset::run($dataset)),
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

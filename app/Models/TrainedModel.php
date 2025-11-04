@@ -10,6 +10,7 @@ class TrainedModel extends Model
     protected $fillable = [
         'dataset_id',
         'model_path',
+        'latest_accuracy'
     ];
     
     public function dataset(): BelongsTo

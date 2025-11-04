@@ -3,6 +3,7 @@
 namespace App\Actions\MachineLearning;
 
 use App\Enums\Algorithm;
+use App\Models\Algorithm as ModelsAlgorithm;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Rubix\ML\Classifiers\ClassificationTree;
 use Rubix\ML\Classifiers\KNearestNeighbors;
@@ -13,13 +14,14 @@ class GetSelectedAlgorithm
 {
     use AsAction;
     
-    public function handle(Algorithm $algorithm): mixed
+    public function handle(int $algorithmId): mixed
     {
-        $selectedAlgorithm = match ($algorithm) {
+        $algorithm = ModelsAlgorithm::find($algorithmId);
+        $selectedAlgorithm = match ($algorithm->name) {
             Algorithm::KNN => new KNearestNeighbors(),
             Algorithm::ClasificationTree => new ClassificationTree(),
             Algorithm::RandomForest => new RandomForest(),
-            Algorithm::GradientBoost => new GradientBoost(),
+            Algorithm::GradientBoost->value => new GradientBoost(),
         };
 
         return $selectedAlgorithm;

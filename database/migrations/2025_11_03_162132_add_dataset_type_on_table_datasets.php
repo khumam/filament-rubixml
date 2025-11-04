@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trained_models', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger("dataset_id");
-            $table->string("model_path");
-            $table->decimal("latest_accuracy");
-            $table->timestamps();
+        Schema::table('datasets', function (Blueprint $table) {
+            $table->string('type')->nullable();
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trained_models');
+        Schema::table('datasets', function (Blueprint $table) {
+            $table->dropColumn('type');
+        });
     }
 };
